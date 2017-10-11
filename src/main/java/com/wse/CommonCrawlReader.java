@@ -13,7 +13,6 @@ import java.util.Map;
  * Created by chaoqunhuang on 10/10/17.
  */
 public class CommonCrawlReader {
-    private int docId = 0;
     private Map<String, Integer> docIdTable= new HashMap<String, Integer>();
     private Posting posting = new Posting();
 
@@ -46,9 +45,8 @@ public class CommonCrawlReader {
                 if (CharMatcher.ASCII.matchesAllOf(sb.toString())) {
                     System.out.println(sb);
                     System.out.println(url);
-                    docIdTable.put(url, docId++);
-                    Map<String, Integer> wordList = posting.getWordsList(sb.toString());
-                    System.out.println(wordList.toString());
+                    docIdTable.put(url, IndexerConstant.DOC_ID);
+                    posting.postToIntermediateFile(sb.toString(), IndexerConstant.DOC_ID++);
                     return;
                 }
                 else {
