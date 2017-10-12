@@ -25,6 +25,7 @@ public class CommonCrawlReader {
             skipLines(bufferedReader, 18);
 
             // Start reading page
+            int count = 1000;
             String buffer;
             while((buffer = bufferedReader.readLine()) != null) {
                 StringBuilder sb = new StringBuilder();
@@ -38,7 +39,7 @@ public class CommonCrawlReader {
                     System.out.println(buffer);
                 }
                 buffer = bufferedReader.readLine();
-                while (!"".equals(buffer)) {
+                while (!"WARC/1.0".equals(buffer)) {
                     buffer = bufferedReader.readLine();
                     sb.append(buffer);
                 }
@@ -47,13 +48,16 @@ public class CommonCrawlReader {
                     System.out.println(url);
                     docIdTable.put(url, IndexerConstant.DOC_ID);
                     posting.postToIntermediateFile(sb.toString(), IndexerConstant.DOC_ID++);
-                    return;
+                    if (count-- < 0) break;
                 }
                 else {
                     System.out.println("Not English");
                 }
-                skipLines(bufferedReader, 1);
             }
+            System.out.println("Intermediate posting is done");
+            System.out.println("=====================================================================");
+            System.out.println("Calling unix sort");
+            posting.sortUsingUnixSort();
 
         }
         catch (IOException e) {

@@ -1,5 +1,6 @@
 package com.wse;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class Posting {
         Map<String, Integer> wordList = getWordsList(content);
         System.out.println(wordList.toString());
         try {
-            PrintWriter printWriter = new PrintWriter("src/../IntermediatePosting/posting.txt");
+            PrintWriter printWriter = new PrintWriter(new FileWriter("src/../IntermediatePosting/posting.txt",true));
             wordList.forEach((k, v) -> {
                 printWriter.println(k + " " + docId + " " + v);
             });
