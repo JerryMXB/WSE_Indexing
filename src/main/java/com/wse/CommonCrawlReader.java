@@ -57,7 +57,8 @@ public class CommonCrawlReader {
             System.out.println("Intermediate posting is done");
             System.out.println("=====================================================================");
             System.out.println("Calling unix sort");
-            posting.sortUsingUnixSort();
+            SortUtil.sortUsingUnixSort(FilePath.INTERMEDIATE_POSTING,
+                    FilePath.INTERMEDIATE_POSTING_SORTED);
 
         }
         catch (IOException e) {
