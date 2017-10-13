@@ -1,5 +1,6 @@
 package com.wse;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,7 +32,9 @@ public class Posting {
         Map<String, Integer> wordList = getWordsList(content);
         System.out.println(wordList.toString());
         try {
-            PrintWriter printWriter = new PrintWriter(new FileWriter(FilePath.INTERMEDIATE_POSTING,true));
+            File file = new File(FilePath.INTERMEDIATE_POSTING);
+            file.createNewFile();
+            PrintWriter printWriter = new PrintWriter(new FileWriter(file,true));
             wordList.forEach((k, v) -> {
                 if (!"".equals(k)) {
                     printWriter.println(k + " " + docId + " " + v);
