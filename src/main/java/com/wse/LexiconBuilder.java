@@ -26,33 +26,47 @@ public class LexiconBuilder {
             String buffer;
             int pointer = 0;
             String word = "";
+            int length = 0;
             int count = 0;
 
             while ((buffer = bufferedReader.readLine()) != null) {
                 String[] params = buffer.split(" ");
                 if (!word.equals(params[0])) {
                     if (pointer == 0) {
-                        lexiconOut.print(IndexerConstant.WORD_ID + " " +  ++pointer + " ");
+                        lexiconOut.print(IndexerConstant.WORD_ID + " " +  pointer + " ");
                     }
                     else {
-                        lexiconOut.print(count + "\n" + IndexerConstant.WORD_ID + " " +  ++pointer + " ");
+                        lexiconOut.print(length + " " + count + "\n" + IndexerConstant.WORD_ID + " " +  ++pointer + " ");
                         count = 0;
+                        length = 0;
                     }
-                    invertedIndexOut.writeInt(Integer.valueOf(params[1]));
-                    invertedIndexOut.writeInt(Integer.valueOf(params[2]));
-                    pointer += 4 + 4;
+                    byte[] compressedInt = VbyteCompress.encode(Integer.valueOf(params[1]));
+                    length += compressedInt.length;
+                    invertedIndexOut.write(compressedInt);
+
+                    byte[] compressedInt2 = VbyteCompress.encode(Integer.valueOf(params[2]));
+                    length += compressedInt2.length;
+                    invertedIndexOut.write(compressedInt2);
+
+                    pointer += compressedInt.length + compressedInt2.length;
                     word = params[0];
                     wordIdTable.put(word, IndexerConstant.WORD_ID++);
                     count++;
                 }
                 else {
-                    invertedIndexOut.writeInt(Integer.valueOf(params[1]));
-                    invertedIndexOut.writeInt(Integer.valueOf(params[2]));
-                    pointer += 4 + 4;
+                    byte[] compressedInt = VbyteCompress.encode(Integer.valueOf(params[1]));
+                    length += compressedInt.length;
+                    invertedIndexOut.write(compressedInt);
+
+                    byte[] compressedInt2 = VbyteCompress.encode(Integer.valueOf(params[2]));
+                    length += compressedInt2.length;
+                    invertedIndexOut.write(compressedInt2);
+
+                    pointer += compressedInt.length + compressedInt2.length;
                     count++;
                 }
             }
-            lexiconOut.print(count + "\n");
+            lexiconOut.print(length + " " + count + "\n");
             lexiconOut.close();
             invertedIndexOut.close();
         }
