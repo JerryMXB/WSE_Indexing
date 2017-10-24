@@ -44,6 +44,5 @@ public class FilePath {
             "/Users/chaoqunhuang/projects/wse/hw2/CC-MAIN-20170919112242-20170919132242-00028.warc.wet",
             "/Users/chaoqunhuang/projects/wse/hw2/CC-MAIN-20170919112242-20170919132242-00029.warc.wet",
             "/Users/chaoqunhuang/projects/wse/hw2/CC-MAIN-20170919112242-20170919132242-00030.warc.wet"
-
     };
 }
