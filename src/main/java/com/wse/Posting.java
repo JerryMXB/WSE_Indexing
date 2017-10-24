@@ -13,6 +13,11 @@ import java.util.Map;
  */
 public class Posting {
 
+    /**
+     * Get the words in a String
+     * @param content a String
+     * @return a word list
+     */
     public Map<String, Integer> getWordsList(String content) {
         String[] words = content.split("\\W+");
         Map<String, Integer> wordList = new HashMap<>();
@@ -28,21 +33,29 @@ public class Posting {
         return wordList;
     }
 
+    /**
+     * Parser postings and write to fil
+     * @param content a String
+     * @param docId The doc Id
+     */
     public void postToIntermediateFile(String content, int docId) {
         Map<String, Integer> wordList = getWordsList(content);
         System.out.println(wordList.toString());
-        try {
-            File file = new File(FilePath.INTERMEDIATE_POSTING);
-            file.createNewFile();
-            PrintWriter printWriter = new PrintWriter(new FileWriter(file,true));
-            wordList.forEach((k, v) -> {
-                if (!"".equals(k)) {
-                    printWriter.println(k + " " + docId + " " + v);
-                }
-            });
-            printWriter.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        synchronized (Posting.class) {
+            try {
+                File file = new File(FilePath.INTERMEDIATE_POSTING);
+                file.createNewFile();
+                PrintWriter printWriter = new PrintWriter(new FileWriter(file, true));
+
+                wordList.forEach((k, v) -> {
+                    if (!"".equals(k)) {
+                        printWriter.println(k + " " + docId + " " + v);
+                    }
+                });
+                printWriter.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

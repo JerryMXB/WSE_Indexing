@@ -26,4 +26,19 @@ public class SortUtil {
             System.out.println(e.getMessage());
         }
     }
+
+    public static void sortUsingUnixSortWith(String input, String output) {
+        try {
+            String cmd[] = {
+                    "/bin/sh",
+                    "-c",
+                    "sort -k1,1 -k2n,2" + input + " > " + output
+            };
+            Process p = Runtime.getRuntime().exec(cmd);
+            int exit = p.waitFor();
+            System.out.println(exit);
+        } catch (InterruptedException | IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

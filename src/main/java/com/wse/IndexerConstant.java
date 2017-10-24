@@ -6,4 +6,5 @@ package com.wse;
 public class IndexerConstant {
     public static int DOC_ID = 1;
     public static int WORD_ID = 1;
+    public static int PAGE_NO = 1;
 }

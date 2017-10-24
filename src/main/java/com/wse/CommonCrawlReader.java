@@ -13,6 +13,10 @@ public class CommonCrawlReader {
     private Map<String, Integer> docIdTable= new HashMap<String, Integer>();
     private Posting posting = new Posting();
 
+    /**
+     * Start parsing file and write to file
+     * @param fileName the file path of the Wet file
+     */
     public void startParser(String fileName) {
         try{
             FileInputStream fileInputStream = new FileInputStream(fileName);
@@ -22,46 +26,45 @@ public class CommonCrawlReader {
             skipLines(bufferedReader, 18);
 
             // Start reading page
-            int count = 10;
             String buffer;
             while((buffer = bufferedReader.readLine()) != null) {
                 StringBuilder sb = new StringBuilder();
                 String url = "";
                 while (!"".equals(buffer)) {
                     buffer = bufferedReader.readLine();
-                    // Print out metadata
                     if (buffer.startsWith("WARC-Target-URI: ")) {
                         url = buffer.split("WARC-Target-URI: ")[1];
                     }
-                    System.out.println(buffer);
                 }
                 buffer = bufferedReader.readLine();
                 while (!"WARC/1.0".equals(buffer) && buffer != null) {
                     buffer = bufferedReader.readLine();
-                    sb.append(" " + buffer);
+                    if (CharMatcher.ASCII.matchesAllOf(buffer)) {
+                        sb.append(" " + buffer);
+                    }
                 }
-                if (CharMatcher.ASCII.matchesAllOf(sb.toString())) {
-                    System.out.println(sb);
+                if (sb.length() != 0) {
+                    System.out.println("Parsing:" + IndexerConstant.PAGE_NO++);
+                    //System.out.println(sb);
                     System.out.println(url);
                     docIdTable.put(url, IndexerConstant.DOC_ID);
                     posting.postToIntermediateFile(sb.toString(), IndexerConstant.DOC_ID++);
-                    //if (count-- < 0) break;
                 }
                 else {
                     System.out.println("Not English");
                 }
             }
-            System.out.println("Intermediate posting is done");
-            System.out.println("=====================================================================");
-            System.out.println("Calling unix sort");
-            SortUtil.sortUsingUnixSort(FilePath.INTERMEDIATE_POSTING, FilePath.INTERMEDIATE_POSTING_SORTED);
-            outputUrlTable();
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
+    /**
+     * Skip certain lines in wet file
+     * @param bufferedReader bufferedReader of the wet file
+     * @param lines lines to skip
+     */
     private void skipLines(BufferedReader bufferedReader, int lines) {
         for (int i = 0; i < lines; i++) {
             try {
@@ -72,7 +75,10 @@ public class CommonCrawlReader {
         }
     }
 
-    private void outputUrlTable() {
+    /**
+     * Write Url table to file
+     */
+    public void outputUrlTable() {
         try {
             System.out.println("Generating Url Table");
             File file = new File(FilePath.URL_TABLE);
