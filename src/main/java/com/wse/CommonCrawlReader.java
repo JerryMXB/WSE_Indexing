@@ -50,6 +50,10 @@ public class CommonCrawlReader {
                     //System.out.println(sb);
                     System.out.println(url);
                     docIdTable.put(url, IndexerConstant.DOC_ID);
+
+                    //Inserting to MongoDb
+                    MongoDb.writeToMongoDb(IndexerConstant.DOC_ID, url, sb.toString());
+
                     posting.postToIntermediateFile(sb.toString(), IndexerConstant.DOC_ID++);
                 }
                 else {

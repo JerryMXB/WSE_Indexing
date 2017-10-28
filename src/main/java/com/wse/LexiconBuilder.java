@@ -208,7 +208,7 @@ public class LexiconBuilder {
             List<Integer> freSub = freList.subList(start, docList.size());
 
             // Number of docs in this block
-            invertedIndexOut.writeInt(count);
+            invertedIndexOut.writeInt(remaining);
             pointer += 4;
 
             // Start docId
