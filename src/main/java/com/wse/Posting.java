@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  *
  * Created by chaoqunhuang on 10/10/17.
@@ -40,7 +41,14 @@ public class Posting {
      */
     public void postToIntermediateFile(String content, int docId) {
         Map<String, Integer> wordList = getWordsList(content);
-        System.out.println(wordList.toString());
+        try {
+            File file = new File(FilePath.INTERMEDIATE_POSTING);
+            file.createNewFile();
+            PrintWriter printWriter = new PrintWriter(new FileWriter(file, true));
+        } catch (IOException ioe) {
+            System.out.println(ioe.getMessage());
+        }
+        // System.out.println(wordList.toString());
         synchronized (Posting.class) {
             try {
                 File file = new File(FilePath.INTERMEDIATE_POSTING);
@@ -54,7 +62,7 @@ public class Posting {
                 });
                 printWriter.close();
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage() + e.getCause());
             }
         }
     }

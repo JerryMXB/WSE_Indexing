@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by chaoqunhuang on 10/10/17.
  */
 public class CommonCrawlReader {
-    private Map<String, Integer> docIdTable= new HashMap<String, Integer>();
+    private static Map<String, Integer> docIdTable= new HashMap<String, Integer>();
     private Posting posting = new Posting();
 
     /**
@@ -39,8 +39,10 @@ public class CommonCrawlReader {
                 buffer = bufferedReader.readLine();
                 while (!"WARC/1.0".equals(buffer) && buffer != null) {
                     buffer = bufferedReader.readLine();
-                    if (CharMatcher.ASCII.matchesAllOf(buffer)) {
-                        sb.append(" " + buffer);
+                    if (buffer != null) {
+                        if (CharMatcher.ASCII.matchesAllOf(buffer)) {
+                            sb.append(" " + buffer);
+                        }
                     }
                 }
                 if (sb.length() != 0) {
@@ -86,11 +88,11 @@ public class CommonCrawlReader {
             PrintWriter printWriter = new PrintWriter(new FileWriter(file,true));
             docIdTable.forEach((k, v) -> {
                 if (!"".equals(k)) {
-                    printWriter.println(k + " " + v);
+                    printWriter.println(v + " " + k);
                 }
             });
             printWriter.close();
-            SortUtil.sortUsingUnixSort(FilePath.URL_TABLE, FilePath.URL_TABLE_SORTED);
+            SortUtil.sortUsingUnixSortAsNum(FilePath.URL_TABLE, FilePath.URL_TABLE_SORTED);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
