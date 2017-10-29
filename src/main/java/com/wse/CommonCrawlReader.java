@@ -49,7 +49,7 @@ public class CommonCrawlReader {
                     System.out.println("Parsing:" + IndexerConstant.PAGE_NO++);
                     //System.out.println(sb);
                     System.out.println(url);
-                    docIdTable.put(url, IndexerConstant.DOC_ID);
+                    docIdTable.put(url + "###" + sb.length(), IndexerConstant.DOC_ID);
 
                     //Inserting to MongoDb
                     MongoDb.writeToMongoDb(IndexerConstant.DOC_ID, url, sb.toString());
@@ -92,7 +92,8 @@ public class CommonCrawlReader {
             PrintWriter printWriter = new PrintWriter(new FileWriter(file,true));
             docIdTable.forEach((k, v) -> {
                 if (!"".equals(k)) {
-                    printWriter.println(v + " " + k);
+                    String[] splits = k.split("###");
+                    printWriter.println(v + " " + splits[0] + " " + splits[1]);
                 }
             });
             printWriter.close();
