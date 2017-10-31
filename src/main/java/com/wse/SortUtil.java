@@ -17,7 +17,7 @@ public class SortUtil {
             String cmd[] = {
                 "/bin/sh",
                 "-c",
-                "sort " + input + " > " + output
+                "sort -k 1,1 " + input + " > " + output
             };
             Process p = Runtime.getRuntime().exec(cmd);
             int exit = p.waitFor();

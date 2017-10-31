@@ -101,7 +101,7 @@ public class LexiconBuilder {
                 String[] params = buffer.split(" ");
                 if ("".equals(word)) {
                     // Starting
-                    System.out.println("Writing inverted index for word: " + params[0]);
+                    System.out.println("Starting Writing inverted index for word: " + params[0]);
                     docFre.put(Integer.valueOf(params[1]), Integer.valueOf(params[2]));
                     word = params[0];
                     count++;
@@ -110,6 +110,7 @@ public class LexiconBuilder {
                     // Change word
                     pointer = writeInvertedListBlock(docFre, invertedIndexOut, lexiconOut, count, pointer);
                     wordIdTable.put(word, IndexerConstant.WORD_ID++);
+                    System.out.println("Recorded" + word + " " + (IndexerConstant.WORD_ID -1));
                     count = 1;
                     System.out.println("Writing inverted index for word: " + params[0]);
                     docFre = new TreeMap<>();

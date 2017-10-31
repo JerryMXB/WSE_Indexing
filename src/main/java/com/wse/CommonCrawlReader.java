@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by chaoqunhuang on 10/10/17.
  */
 public class CommonCrawlReader {
-    private static Map<String, Integer> docIdTable= new HashMap<String, Integer>();
+    public static Map<String, Integer> docIdTable= new HashMap<String, Integer>();
     private Posting posting = new Posting();
 
     /**
@@ -49,17 +49,14 @@ public class CommonCrawlReader {
                     System.out.println("Parsing:" + IndexerConstant.PAGE_NO++);
                     //System.out.println(sb);
                     System.out.println(url);
-                    docIdTable.put(url + "###" + sb.length(), IndexerConstant.DOC_ID);
-
-                    //Inserting to MongoDb
-                    MongoDb.writeToMongoDb(IndexerConstant.DOC_ID, url, sb.toString());
-
-                    posting.postToIntermediateFile(sb.toString(), IndexerConstant.DOC_ID++);
+                    posting.postToIntermediateFile(url, sb.toString());
                 }
                 else {
                     System.out.println("Not English");
                 }
             }
+            bufferedReader.close();
+            fileInputStream.close();
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
