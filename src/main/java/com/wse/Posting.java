@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  *
  * Created by chaoqunhuang on 10/10/17.
@@ -36,25 +37,29 @@ public class Posting {
     /**
      * Parser postings and write to fil
      * @param content a String
-     * @param docId The doc Id
      */
-    public void postToIntermediateFile(String content, int docId) {
+    public void postToIntermediateFile(String url, String content) {
         Map<String, Integer> wordList = getWordsList(content);
-        System.out.println(wordList.toString());
+        // System.out.println(wordList.toString());
         synchronized (Posting.class) {
             try {
+                CommonCrawlReader.docIdTable.put(url + "###" + content.length(), IndexerConstant.DOC_ID);
+                //Inserting to MongoDb
+                MongoDb.writeToMongoDb(IndexerConstant.DOC_ID, url, content);
+
                 File file = new File(FilePath.INTERMEDIATE_POSTING);
                 file.createNewFile();
                 PrintWriter printWriter = new PrintWriter(new FileWriter(file, true));
 
                 wordList.forEach((k, v) -> {
                     if (!"".equals(k)) {
-                        printWriter.println(k + " " + docId + " " + v);
+                        printWriter.println(k + " " + IndexerConstant.DOC_ID + " " + v);
                     }
                 });
+                IndexerConstant.DOC_ID++;
                 printWriter.close();
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage() + e.getCause());
             }
         }
     }

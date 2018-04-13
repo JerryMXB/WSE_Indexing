@@ -17,7 +17,22 @@ public class SortUtil {
             String cmd[] = {
                 "/bin/sh",
                 "-c",
-                "sort " + input + " > " + output
+                "sort -k 1,1 " + input + " > " + output
+            };
+            Process p = Runtime.getRuntime().exec(cmd);
+            int exit = p.waitFor();
+            System.out.println(exit);
+        } catch (InterruptedException | IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void sortUsingUnixSortAsNum(String input, String output) {
+        try {
+            String cmd[] = {
+                    "/bin/sh",
+                    "-c",
+                    "sort -k 1n,1 " + input + " > " + output
             };
             Process p = Runtime.getRuntime().exec(cmd);
             int exit = p.waitFor();
@@ -32,7 +47,7 @@ public class SortUtil {
             String cmd[] = {
                     "/bin/sh",
                     "-c",
-                    "sort -k1,1 -k2n,2" + input + " > " + output
+                    "sort -k 1,1 -k 2n,2 " + input + " > " + output
             };
             Process p = Runtime.getRuntime().exec(cmd);
             int exit = p.waitFor();
